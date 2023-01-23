@@ -22,14 +22,15 @@ jobs:
         run: npm install --location=global md-to-pdf
       - name: Convert markdown to pdf
         run: |
-          sudo chmod +x ./.github/workflows/md_to_pdf.sh
-          ./.github/workflows/md_to_pdf.sh '${{ github.ref_name }}'
+            sudo chmod +x ./.github/workflows/md_to_pdf.sh
+            ./.github/workflows/md_to_pdf.sh '${{ github.ref_name }}'
       - name: Create release zip
         run: |
-          sudo chmod +x ./.github/workflows/create-release.sh
-          ./.github/workflows/create-release.sh ${{ github.event.repository.name }} ${{ github.ref_name }}
+            sudo chmod +x ./.github/workflows/create-release.sh
+            ./.github/workflows/create-release.sh ${{ github.event.repository.name }} ${{ github.ref_name }}
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ github.event.repository.name }}-release-${{ github.ref_name }}.zip
+          artifacts:
+            ${{ github.event.repository.name }}-release-${{ github.ref_name }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
