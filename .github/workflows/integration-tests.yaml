@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 17.x
       - name: Install dependencies
-        run: sudo npm i md-to-pdf@5.1.0
+        run: sudo npm install -g md-to-pdf@5.1.0
       - name: Convert markdown to pdf
         run: |
           sudo chmod +x ./.github/workflows/md_to_pdf.sh
