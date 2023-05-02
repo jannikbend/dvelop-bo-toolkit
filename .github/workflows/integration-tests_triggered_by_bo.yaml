@@ -26,7 +26,7 @@ jobs:
   integration_test_short_windows_ps7:
     name: Short, Windows, PS7, version '${{ matrix.version }}'
     #needs: [setup]
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       matrix:
         version:
@@ -50,7 +50,7 @@ jobs:
   integration_test_short_windows_ps5:
     name: Short, Windows, PS5, version '${{ matrix.version }}'
     #needs: [setup]
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       matrix:
         version:
@@ -73,7 +73,7 @@ jobs:
   integration_test_short_ubuntu_ps7_mssql:
     name: Short, Ubuntu, PS7, mssql data source, version '${{ matrix.version }}'
     #needs: [setup]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         version:
@@ -96,7 +96,7 @@ jobs:
   integration_test_long_ubuntu_ps7:
     name: Long, Ubuntu, PS7, version, batching enabled '${{ matrix.version }}'
     #needs: [setup]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         version:
@@ -119,7 +119,7 @@ jobs:
   integration_test_short_ubuntu_ps7_no_batching:
     name: Short, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
     #needs: [setup]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         version:
