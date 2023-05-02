@@ -20,7 +20,7 @@ jobs:
         # Define what versions should be regularly tested. An empty string means the latest commit (not release!).
         # (Versions must be defined by their git refs name, e. g. 'refs/tags/v1.0.0')
         #run: echo "::set-output name=matrix::['']"
-        run: echo "version_matrix=['refs/tags/v1.1.0', ''] >> "$GITHUB_OUTPUT"
+        run: echo "version_matrix=['refs/tags/v1.1.0', '']" >> $GITHUB_OUTPUT
 
   # Short test on windows using PS7
   integration_test_short_windows_ps7:
