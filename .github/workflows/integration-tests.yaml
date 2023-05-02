@@ -11,7 +11,7 @@ jobs:
     name: Short, Windows, PS7
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -21,7 +21,6 @@ jobs:
         shell: pwsh
         run: |
           echo "Test CSV import"
-          ./business_objects_upload/test/TestWrapperScript.ps1 -short -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
 
   # Short test on windows using PS5
@@ -29,7 +28,7 @@ jobs:
     name: Short, Windows, PS5'
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -39,14 +38,13 @@ jobs:
         shell: powershell
         run: |
           echo "Test CSV import"
-          ./business_objects_upload/test/TestWrapperScript.ps1 -short -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
   # Short test on ubuntu using PS7 and a mssql data source
   integration_test_short_ubuntu_ps7_mssql:
     name: Short, Ubuntu, PS7, mssql data source
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -56,16 +54,13 @@ jobs:
         shell: pwsh
         run: |
           echo "Test MSSQL import"
-          ./.github/workflows/setup-mssql-db.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }}
-          ./business_objects_upload/test/TestWrapperScript.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }} -dbType mssql -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/mssql/ScriptConfig.template.json
-
 
   # Long test on ubuntu using PS7
   integration_test_long_ubuntu_ps7:
     name: Long, Ubuntu, PS7, batching enabled
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -75,15 +70,13 @@ jobs:
         shell: pwsh
         run: |
           echo "Test CSV import"
-          ./business_objects_upload/test/TestWrapperScript.ps1 -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
-
 
   # Short test on ubuntu using PS7 without batching
   integration_test_short_ubuntu_ps7_no_batching:
     name: Short, Ubuntu, PS7, batching disabled
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -93,7 +86,6 @@ jobs:
         shell: pwsh
         run: |
           echo "Test CSV import"
-          ./business_objects_upload/test/TestWrapperScript.ps1 -short -noBatching -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
 
   release:
@@ -105,7 +97,7 @@ jobs:
     # See: https://stackoverflow.com/questions/65324440/github-actions-using-workflow-run-based-on-new-tags
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js 17.x
         uses: actions/setup-node@v2
         with:
@@ -126,23 +118,3 @@ jobs:
           artifacts:
             ${{ github.event.repository.name }}-release-${{ github.ref_name }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
-
-  notify-teams:
-    runs-on: ubuntu-latest
-    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
-    needs:
-      [
-        integration_test_long_ubuntu_ps7,
-        integration_test_short_windows_ps5,
-        integration_test_short_windows_ps7,
-        integration_test_short_ubuntu_ps7_mssql,
-        integration_test_short_ubuntu_ps7_no_batching,
-        release
-      ]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Sending teams notification
-        run: |
-          chmod +x ./.github/workflows/notification.sh
-          echo "Sending teams notification"
-          ./.github/workflows/notification.sh ${{ secrets.TEAMS_WEBHOOK }}
