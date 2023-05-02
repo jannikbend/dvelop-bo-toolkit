@@ -14,13 +14,13 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      matrix_versions: ${{ steps.set-version-matrix.outputs.matrix }}
+      version_matrix: ${{ steps.set-version-matrix.outputs.version_matrix }}
     steps:
       - id: set-version-matrix
         # Define what versions should be regularly tested. An empty string means the latest commit (not release!).
         # (Versions must be defined by their git refs name, e. g. 'refs/tags/v1.0.0')
         #run: echo "::set-output name=matrix::['']"
-        run: echo "matrix=[''] >> "$GITHUB_OUTPUT"
+        run: echo "version_matrix=['refs/tags/v1.1.0', ''] >> "$GITHUB_OUTPUT"
 
   # Short test on windows using PS7
   integration_test_short_windows_ps7:
@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         version:
-          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+          - ${{fromJson(needs.setup.outputs.version_matrix)}}
     steps:
       - uses: actions/checkout@v3
         with:
